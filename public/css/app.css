@@ -1,0 +1,103 @@
+
+
+/* bootstrap中的form-inline仅对768px以上宽度有效果。禁用响应式布局后，在这里重载form-inline样式使其对所有视口宽度有效 */
+.form-inline .form-group {
+  display: inline-block;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+.form-inline .form-control {
+  display: inline-block;
+  width: 95%;
+  vertical-align: middle;
+}
+.form-inline .form-control-static {
+  display: inline-block;
+}
+.form-inline .input-group {
+  display: inline-table;
+  vertical-align: middle;
+}
+.form-inline .input-group .input-group-addon,
+.form-inline .input-group .input-group-btn,
+.form-inline .input-group .form-control {
+  width: auto;
+}
+.form-inline .input-group > .form-control {
+  width: 100%;
+}
+.form-inline .control-label {
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+.form-inline .radio,
+.form-inline .checkbox {
+  display: inline-block;
+  margin-top: 0;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+.form-inline .radio label,
+.form-inline .checkbox label {
+  padding-left: 0;
+}
+.form-inline .radio input[type="radio"],
+.form-inline .checkbox input[type="checkbox"] {
+  position: relative;
+  margin-left: 0;
+}
+.form-inline .has-feedback .form-control-feedback {
+  top: 0;
+}
+
+/*  --------------------------  */
+
+.form-group {
+    width: 220px;
+}
+
+.container {
+    width: 800px;
+}
+
+.panel-heading {
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+}
+
+.full-width {
+    width: auto;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+input,
+select {
+    width: 100%;
+}
+
+.btn-submit {
+    width: 85%;
+}
+.btn-reset {
+    width: 14.4%;
+}
+
+body {
+    position: relative;
+}
+
+#navbar {
+    position: fixed;
+    top: 79px;
+    right: 40px;
+}
+
+.list-group-item.active,
+.list-group-item.active:hover {
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}

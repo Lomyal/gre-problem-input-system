@@ -1,0 +1,14 @@
+{
+  "name": "gre-problem-input-system",
+  "private": true,
+  "version": "0.0.0",
+  "description": "GRE input",
+  "repository": "https://github.com/Lomyal/gre-problem-input-system",
+  "license": "MIT",
+  "dependencies": {
+    "http-server": "^0.6.1"
+  },
+  "scripts": {
+    "start": "http-server ./ -a localhost -p 9000 -c-1"
+  }
+}

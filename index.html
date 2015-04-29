@@ -1,0 +1,237 @@
+<!doctype html>
+<html ng-app="GREApp">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GRE 模考题录入系统</title>
+    <meta name="description" content="GRE 模考题录入系统">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <link rel="stylesheet" href="public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="public/css/app.css">
+
+  </head>
+  <body data-spy="scroll" data-target="#navbar" ng-controller="InputController">
+    <div id="navbar" class="">
+      <div class="list-group">
+        <a class="list-group-item" ng-repeat="problemItem in problem.problemItems" href="#problem-item-{{$index + 1}}">Problem Item {{$index + 1}}</a>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <h1 class="text-center">GRE 模考题录入系统</h1>
+
+          <div>
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                Problem
+              </div>
+              <div class="panel-body">
+                <div class="form-inline">
+                  <div class="form-group">
+                    <label>Affiliated Exercise ID</label>
+                    <input type="text" class="form-control" ng-model="problem.exerciseId">
+                  </div>
+
+                  <div class="form-group">
+                    <label>Affiliated Exercise Difficulty</label>
+                    <!-- <input type="text" class="form-control" ng-model="problem.exerciseDiff"> -->
+                    <select class="form-control" ng-model="problem.exerciseDiff" ng-options="diff for diff in diffs"></select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Affiliated Section ID</label>
+                    <input type="text" class="form-control" ng-model="problem.sectionId">
+                  </div>
+                </div>
+                <hr>
+
+                <div class="form-inline">
+                  <div class="form-group">
+                    <label>Problem ID</label>
+                    <input type="text" class="form-control" ng-model="problem.problemId">
+                  </div>
+
+                  <div class="form-group">
+                    <label>Problem Difficulty</label>
+                    <!-- <input type="text" class="form-control" ng-model="problem.problemDiff"> -->
+                    <select class="form-control" ng-model="problem.problemDiff" ng-options="diff for diff in diffs"></select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Problem Type</label>
+                    <!-- <input type="text" class="form-control" ng-model="problem.type"> -->
+                    <select class="form-control" ng-model="problem.type" ng-options="problemType for problemType in problemTypes"></select>
+                  </div>
+                </div>
+                <hr>
+
+                <div class="form-group full-width">
+                  <label>Problem Instruction</label>
+                  <textarea type="text" class="form-control" ng-model="problem.instruction"></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                  <label>Problem Description</label>
+                  <textarea type="text" class="form-control" ng-model="problem.description"></textarea>
+                </div>
+                <hr>
+
+                <div class="panel panel-info">
+                  <div class="panel-heading">
+                    <p>Number of Problem Items: [ {{problem.problemItems.length}} ]</p>
+                    <div class="btn-group">
+                      <button class="btn btn-info" ng-click="addProblemItem()"><span class="glyphicon glyphicon-plus"></span></button>
+                      <button class="btn btn-info" ng-click="removeProblemItem()"><span class="glyphicon glyphicon-minus"></span></button>
+                    </div>
+                  </div>
+                </div>
+                <!-- <hr> -->
+
+
+                <div class="panel panel-info" ng-repeat="problemItem in problem.problemItems">
+                  <div class="panel-heading" id="problem-item-{{$index + 1}}">
+                    Problem Item {{$index + 1}}
+                  </div>
+                  <div class="panel-body">
+                    <div class="form-inline">
+                      <div class="form-group">
+                        <label>Problem Item ID (Global)</label>
+                        <input type="text" class="form-control" ng-model="problemItem.problemItemId">
+                      </div>
+
+                      <div class="form-group">
+                        <label>Type Number</label>
+                        <!-- <input type="text" class="form-control" ng-model="choice.typeNumber"> -->
+                        <select class="form-control" ng-model="choice.typeNumber" ng-options="problemItemType for problemItemType in problemItemTypes"></select>
+                      </div>
+                    </div>
+                    <hr>
+
+                    <div class="form-group full-width">
+                      <label>Description Detail</label>
+                      <textarea type="text" class="form-control" ng-model="problemItem.descriptionDetail"></textarea>
+                    </div>
+                    <hr>
+
+                    <div class="panel panel-success">
+                      <div class="panel-heading">
+                        <p>Number of Choices: [ {{problemItem.choices.length}} ]</p>
+                        <div class="btn-group">
+                          <button class="btn btn-success" ng-click="addChoiceFor(problemItem.choices)"><span class="glyphicon glyphicon-plus"></span></button>
+                          <button class="btn btn-success" ng-click="removeChoiceFor(problemItem.choices)"><span class="glyphicon glyphicon-minus"></span></button>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <hr> -->
+
+                    <div class="panel panel-success" ng-repeat="choice in problemItem.choices">
+                      <div class="panel-heading">
+                        Choice {{$index + 1}}
+                      </div>
+                      <div class="panel-body">
+                        <div class="form-inline">
+                          <!-- <div class="form-group">
+                            <label>Choice ID</label>
+                            <input type="text" class="form-control" ng-model="choice.choiceId">
+                          </div> -->
+                          <div ng-hide="true">{{choice.choiceId = $index + 1}}</div>
+
+                          <div class="form-group">
+                            <label>Is Right Answer</label>
+                            <!-- <input type="text" class="form-control" ng-model="choice.isRightAnswer"> -->
+                            <select class="form-control" ng-model="choice.isRightAnswer" ng-options="booleanValue for booleanValue in booleanValues"></select>
+                          </div>
+                        </div>
+                        <hr>
+
+                        <div class="form-group full-width">
+                          <label>Content</label>
+                          <textarea type="text" class="form-control" ng-model="choice.content"></textarea>
+                        </div>
+
+                        <div class="form-inline">
+                          <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" class="form-control" ng-model="choice.loc">
+                          </div>
+
+                          <div class="form-group">
+                            <label>Context Left</label>
+                            <input type="text" class="form-control" ng-model="choice.context1">
+                          </div>
+
+                          <div class="form-group">
+                            <label>Context Right</label>
+                            <input type="text" class="form-control" ng-model="choice.context2">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="panel panel-danger">
+                      <div class="panel-heading">
+                        Comment
+                      </div>
+                      <div class="panel-body">
+                        <div class="form-group full-width">
+                          <label>Comment Detail</label>
+                          <textarea type="text" class="form-control" ng-model="problemItem.comment.commentDetail"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Video Name</label>
+                          <input type="text" class="form-control" ng-model="problemItem.comment.videoName">
+                        </div>
+
+                        <div class="form-group">
+                          <label>Video Path</label>
+                          <input type="text" class="form-control" ng-model="problemItem.comment.videoPath">
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="panel panel-warning">
+                  <div class="panel-heading">
+                    Figure
+                  </div>
+                  <div class="panel-body">
+                    <div class="form-group">
+                      <label>Figure Name</label>
+                      <input type="text" class="form-control" ng-model="problem.figure.figureName">
+                    </div>
+
+                    <div class="form-group">
+                      <label>Figure Path</label>
+                      <input type="text" class="form-control" ng-model="problem.figure.figurePath">
+                    </div>
+                  </div>
+                </div>
+                <hr>
+
+                <button class="btn btn-lg btn-primary btn-submit" ng-click="submit()">Submit</button>
+                <button class="btn btn-lg btn-danger btn-reset" ng-click="reset()">Reset</button>
+              </div>
+            </div>
+
+            <!-- <hr>
+            <p>TEST DATA</p>
+            <p>{{problem}}</p> -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <script src="public/js/jquery.min.js"></script>
+    <script src="public/js/angular.min.js"></script>
+    <script src="public/js/bootstrap.min.js"></script>
+    <script src="public/js/app.js"></script>
+  </body>
+</html>
+
