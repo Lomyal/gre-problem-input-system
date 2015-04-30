@@ -26,23 +26,26 @@ angular.module('GREApp', [])
                         "context2":""
                     }
                 ],
+                "figures": [
+                    {
+                        "figureName":"",
+                        "figurePath":"",
+                        "figureDescription":""
+                    }
+                ],
                 "comment": {
                     "commentDetail":"",
                     "videoName":"",
                     "videoPath":""
                 }
             }
-        ],
-        "figure": {
-            "figureName":"",
-            "figurePath":""
-        },
+        ]
     };
 
     // option 组件选项
     $scope.diffs = ['Easy', 'Medium', 'Hard', 'Adaptive'];
-    $scope.problemTypes = ['AW Issue', 'AW Argument', 'Verbal 1', 'Verbal 2', 'Math 1', 'Math 2', 'Math 3'];
-    $scope.problemItemTypes = ['1', '2', '3'];
+    $scope.problemTypes = ['0', '1', '2', '3', '4'];
+    $scope.problemItemTypes = ['0', '1', '2', '3', '4', '5', '6'];
     $scope.booleanValues = ['true', 'false'];
 
     // 小题目模板
@@ -58,6 +61,13 @@ angular.module('GREApp', [])
                 "loc":"",
                 "context1":"",
                 "context2":""
+            }
+        ],
+        "figures": [
+            {
+                "figureName":"",
+                "figurePath":"",
+                "figureDescription":""
             }
         ],
         "comment": {
@@ -77,6 +87,13 @@ angular.module('GREApp', [])
         "context2":""
     };
 
+    // 图形模板
+    var figureTemplate = {
+        "figureName":"",
+        "figurePath":"",
+        "figureDescription":""
+    };
+
     // “实例化”模板
     function newTemplateInstance(template) {
         return JSON.parse(JSON.stringify(template));
@@ -86,7 +103,6 @@ angular.module('GREApp', [])
     $scope.addProblemItem = function() {
         var problemItem = newTemplateInstance(problemItemTemplate);
         $scope.problem.problemItems.push(problemItem);
-        // $scope.$apply();
     };
 
     // 减少小题目
@@ -95,14 +111,12 @@ angular.module('GREApp', [])
         if (arr.length > 1) {
             arr.pop();
         }
-        // $scope.$apply();
     };
 
     // 增加选项
     $scope.addChoiceFor = function(choices) {
         var choice = newTemplateInstance(choiceTemplate);
         choices.push(choice);
-        // $scope.$apply();
     };
 
     // 减少选项
@@ -110,12 +124,24 @@ angular.module('GREApp', [])
         if (choices.length > 1) {
             choices.pop();
         }
-        // $scope.$apply();
+    };
+
+    // 增加图形
+    $scope.addFigureFor = function(figures) {
+        var figure = newTemplateInstance(figureTemplate);
+        figures.push(figure);
+    };
+
+    // 减少图形
+    $scope.removeFigureFor = function(figures) {
+        if (figures.length > 1) {
+            figures.pop();
+        }
     };
 
     // 提交大题目
     $scope.submit = function() {
-        $http.post('DealJsonAction', { myJsonStr: $scope.problem })
+        $http.post('DealJsonAction', JSON.stringify( { myJsonStr: angular.toJson($scope.problem) } ) )
             .success(function(data, status, headers, config) {
 
             })
@@ -153,17 +179,20 @@ angular.module('GREApp', [])
                                 "context2":""
                             }
                         ],
+                        "figures": [
+                            {
+                                "figureName":"",
+                                "figurePath":"",
+                                "figureDescription":""
+                            }
+                        ],
                         "comment": {
                             "commentDetail":"",
                             "videoName":"",
                             "videoPath":""
                         }
                     }
-                ],
-                "figure": {
-                    "figureName":"",
-                    "figurePath":""
-                },
+                ]
             };
         }
     };
@@ -172,7 +201,7 @@ angular.module('GREApp', [])
     window.onscroll = function() {
         var items = $scope.problem.problemItems;
         var len = items.length;
-        var bodyTop = document.body.scrollTop;
+        var bodyTop = document.body.scrollTop || document.documentElement.scrollTop;  // FF 不支持前者，Chrome 不支持后者。都支持：window.pageYOffset
         var nav = document.getElementById('navbar');
 
         for (; len > 0; len--) {
@@ -191,6 +220,21 @@ angular.module('GREApp', [])
                 break;
             }
         }
+    };
+
+    // 文件上传
+    $scope.upload = function(type, index) {
+        var name = 'upload-form-' + type + '-' + index;
+        var form = document.getElementById(name);  // id 和 name 一致
+        var fd = new FormData(form);
+
+        $http.post('/', fd, { headers: {'Content-Type': undefined} })
+                .success(function(data, status, headers, config) {
+                    console.log(data);
+                })
+                .error(function(data, status, headers, config) {
+                    alert('上传失败，请重试');
+                });
     };
 
 }]);

@@ -170,6 +170,40 @@
                       </div>
                     </div>
 
+                    <div class="panel panel-warning">
+                      <div class="panel-heading">
+                        <p>Number of Figures: [ {{problemItem.figures.length}} ]</p>
+                        <div class="btn-group">
+                          <button class="btn btn-warning" ng-click="addFigureFor(problemItem.figures)"><span class="glyphicon glyphicon-plus"></span></button>
+                          <button class="btn btn-warning" ng-click="removeFigureFor(problemItem.figures)"><span class="glyphicon glyphicon-minus"></span></button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="panel panel-warning" ng-repeat="figure in problemItem.figures">
+                      <div class="panel-heading">
+                        Figure {{$index + 1}}
+                      </div>
+                      <div class="panel-body">
+                        <div class="form-group full-width">
+                          <label>Figure Description</label>
+                          <textarea type="text" class="form-control" ng-model="figure.figureDescription"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Figure Name</label>
+                          <input type="text" class="form-control" ng-model="figure.figureName">
+                        </div>
+
+                        <div class="form-group">
+                          <label>Figure Path</label>
+                          <!--<input type="text" class="form-control" ng-model="problemItem.figure.figurePath">-->
+                          <input type="file" id="file" class="form-control" ng-model="figure.figurePath">
+                        </div>
+
+                      </div>
+                    </div>
+
                     <div class="panel panel-danger">
                       <div class="panel-heading">
                         Comment
@@ -180,57 +214,49 @@
                           <textarea type="text" class="form-control" ng-model="problemItem.comment.commentDetail"></textarea>
                         </div>
 
-                        <div class="form-group">
-                          <label>Video Name</label>
-                          <input type="text" class="form-control" ng-model="problemItem.comment.videoName">
-                        </div>
+                        <!--<div class="form-group">-->
+                          <!--<label>Video Name</label>-->
+                          <!--<input type="text" class="form-control" ng-model="problemItem.comment.videoName">-->
+                        <!--</div>-->
 
-                        <div class="form-group">
-                          <label>Video Path</label>
-                          <input type="text" class="form-control" ng-model="problemItem.comment.videoPath">
-                        </div>
+                        <!--<div class="form-group">-->
+                          <!--<label>Video Path</label>-->
+                          <!--<input type="text" class="form-control" ng-model="problemItem.comment.videoPath">-->
+                        <!--</div>-->
+
+                        <form id="upload-form-video-{{$index}}">
+                          <div class="form-group">
+                            <label>Upload Video</label>
+                            <input type="file" name="upload-form-video-{{$index}}"/>
+                          </div>
+                        </form>
+                        <button class="btn btn-info" ng-click="upload('video', $index)">上传</button>
+                        <!--<p ng-show="">上传成功</p>-->
+
                       </div>
                     </div>
 
                   </div>
                 </div>
 
-                <div class="panel panel-warning">
-                  <div class="panel-heading">
-                    Figure
-                  </div>
-                  <div class="panel-body">
-                    <div class="form-group">
-                      <label>Figure Name</label>
-                      <input type="text" class="form-control" ng-model="problem.figure.figureName">
-                    </div>
-
-                    <div class="form-group">
-                      <label>Figure Path</label>
-                      <input type="text" class="form-control" ng-model="problem.figure.figurePath">
-                    </div>
-                  </div>
-                </div>
-                <hr>
-
                 <button class="btn btn-lg btn-primary btn-submit" ng-click="submit()">Submit</button>
                 <button class="btn btn-lg btn-danger btn-reset" ng-click="reset()">Reset</button>
               </div>
             </div>
 
-            <!-- <hr>
+            <hr>
             <p>TEST DATA</p>
-            <p>{{problem}}</p> -->
+            <p>{{problem}}</p>
           </div>
-
+          
         </div>
       </div>
     </div>
 
 
-    <script src="public/js/jquery.min.js"></script>
-    <script src="public/js/angular.min.js"></script>
-    <script src="public/js/bootstrap.min.js"></script>
+    <script src="public/js/lib/jquery.min.js"></script>
+    <script src="public/js/lib/angular.min.js"></script>
+    <script src="public/js/lib/bootstrap.min.js"></script>
     <script src="public/js/app.js"></script>
   </body>
 </html>

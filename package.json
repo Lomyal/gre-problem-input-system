@@ -6,9 +6,10 @@
   "repository": "https://github.com/Lomyal/gre-problem-input-system",
   "license": "MIT",
   "dependencies": {
-    "http-server": "^0.6.1"
+    "express": "^4.12.3",
+    "multer": "^0.1.8"
   },
   "scripts": {
-    "start": "http-server ./ -a localhost -p 9000 -c-1"
+    "start": "supervisor server.js"
   }
 }
