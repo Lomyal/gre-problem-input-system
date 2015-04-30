@@ -17,16 +17,13 @@ app.get('/', function(req, res) {
 
 // 上传文件路由
 app.post('/', function(req, res){
-    //llog(Object.keys(req.body)); // form fields
-    //llog(Object.keys(req.files.onixfile)); // form files
-    for (var keys in req.files) {
-        console.log(keys + ': ' + req.files[keys])
-    }
-    //var sendback = {
-    //    name: req.files.onixfile.name,
-    //    path: req.files.onixfile.path
-    //};
-    res.send(req.files);
+    var key = Object.keys(req.files)[0];
+    var sendback = {
+        name: req.files[key].name,
+        path: req.files[key].path
+    };
+
+    res.send(sendback);
 });
 
 

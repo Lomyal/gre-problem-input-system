@@ -1,5 +1,9 @@
-angular.module('GREApp', [])
-.controller('InputController', ['$scope', '$http', function($scope, $http) {
+var app = angular.module('GREApp', []);
+
+
+
+// 全局控制器
+app.controller('AppController', ['$scope', '$http', function($scope, $http) {
 
     // 大题目模型
     $scope.problem = {
@@ -44,8 +48,66 @@ angular.module('GREApp', [])
 
     // option 组件选项
     $scope.diffs = ['Easy', 'Medium', 'Hard', 'Adaptive'];
-    $scope.problemTypes = ['0', '1', '2', '3', '4'];
-    $scope.problemItemTypes = ['0', '1', '2', '3', '4', '5', '6'];
+    $scope.problemTypes = [
+        {
+            code: 0,
+            label: 'AW Issue'
+        },
+        {
+            code: 1,
+            label: 'AW Argument'
+        },
+        {
+            code: 2,
+            label: 'Verbal'
+        },
+        {
+            code: 3,
+            label: 'Math'
+        }
+    ];
+    $scope.problemItemTypes = [
+        {
+            code: 0,
+            label: 'itemType1'
+        },
+        {
+            code: 1,
+            label: 'itemType2'
+        },
+        {
+            code: 2,
+            label: 'itemType3'
+        },
+        {
+            code: 3,
+            label: 'itemType4'
+        },
+        {
+            code: 4,
+            label: 'itemType5'
+        },
+        {
+            code: 5,
+            label: 'itemType6'
+        },
+        {
+            code: 6,
+            label: 'itemType7'
+        },
+        {
+            code: 7,
+            label: 'itemType8'
+        },
+        {
+            code: 8,
+            label: 'itemType9'
+        },
+        {
+            code: 9,
+            label: 'itemType10'
+        }
+    ];
     $scope.booleanValues = ['true', 'false'];
 
     // 小题目模板
@@ -223,18 +285,87 @@ angular.module('GREApp', [])
     };
 
     // 文件上传
-    $scope.upload = function(type, index) {
-        var name = 'upload-form-' + type + '-' + index;
-        var form = document.getElementById(name);  // id 和 name 一致
-        var fd = new FormData(form);
+    $scope.upload = function(inputFileCompoId, callback) {
+        var file = document.getElementById(inputFileCompoId).files[0];
+        var fd = new FormData();
+
+        fd.append('name-does-not-matter', file);
 
         $http.post('/', fd, { headers: {'Content-Type': undefined} })
                 .success(function(data, status, headers, config) {
-                    console.log(data);
+                    callback(true, data);
                 })
                 .error(function(data, status, headers, config) {
-                    alert('上传失败，请重试');
+                    callback(false, data);
                 });
     };
+
+}]);
+
+
+
+
+// Problem Item 控制器
+app.controller('ProblemItemController', ['$scope', function($scope) {
+
+    $scope.uploadSuccess = false;
+
+    // 上传视频
+    $scope.uploadVideo = function() {
+        var formId = 'upload-form-video-' + $scope.$index;
+
+        $scope.$parent.upload(formId, function(succeed, data) {
+            if (succeed) {
+
+                // 更新显示
+                $scope.uploadSuccess = true;
+
+                // 更新模型
+                $scope.problemItem.comment.videoName = data.name;
+                $scope.problemItem.comment.videoPath = data.path;
+
+            } else {
+                alert('上传失败，请重试');
+                $scope.uploadSuccess = false;
+            }
+        });
+    };
+
+}]);
+
+// Figure 控制器
+app.controller('FigureController', ['$scope', function($scope) {
+
+    $scope.uploadSuccess = false;
+
+    // 上传图形
+    $scope.uploadFigure = function() {
+        var formId = 'upload-form-figure-' + $scope.$parent.$index + '-' + $scope.$index;
+
+        $scope.$parent.upload(formId, function(succeed, data) {
+            if (succeed) {
+
+                // 更新显示
+                $scope.uploadSuccess = true;
+
+                // 更新模型
+                $scope.figure.figureName = data.name;
+                $scope.figure.figurePath = data.path;
+
+            } else {
+                alert('上传失败，请重试');
+                $scope.uploadSuccess = false;
+            }
+        });
+    };
+
+}]);
+
+// Choice 控制器
+app.controller('ChoiceController', ['$scope', function($scope) {
+
+    var index = $scope.$index + 1;
+    $scope.choice.choiceId = index;
+    $scope.choice.loc = index;
 
 }]);
