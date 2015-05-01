@@ -101,3 +101,11 @@ body {
     background-color: #5bc0de;
     border-color: #46b8da;
 }
+
+input.input-file[type=file] {
+  display: none;
+}
+
+.fake-input-file {
+  margin-bottom: 10px;
+}

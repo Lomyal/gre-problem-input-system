@@ -174,10 +174,16 @@
 
                         <div class="form-group full-width">
                           <label>Upload Figure</label>
-                          <input type="file" id="upload-form-figure-{{$parent.$index}}-{{$index}}"/>
+                          <input type="text" class="form-control fake-input-file" disabled ng-model="fileName"/>
+                          <input type="file"
+                                 class="input-file"
+                                 id="upload-form-figure-{{$parent.$index}}-{{$index}}"
+                                 ng-model="files"
+                                 onchange="angular.element(this).scope().figureNameChanged(this)"/>
+                          <button class="btn btn-default" ng-click="browseFigure()"><span class="glyphicon glyphicon-folder-open"></span></button>
+                          <button class="btn btn-default" ng-click="uploadFigure()" ng-show="selectFileSuccess"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                          <button class="btn btn-success" ng-show="uploadSuccess" disabled><span class="glyphicon glyphicon-ok"></span></button>
                         </div>
-                        <button class="btn btn-info" ng-click="uploadFigure()">Upload</button>
-                        <p ng-show="uploadSuccess">Upload Succeeded</p>
 
                       </div>
                     </div>
@@ -194,10 +200,16 @@
 
                         <div class="form-group full-width">
                           <label>Upload Video</label>
-                          <input type="file" id="upload-form-video-{{$index}}"/>
+                          <input type="text" class="form-control fake-input-file" disabled ng-model="fileName"/>
+                          <input type="file"
+                                 class="input-file"
+                                 id="upload-form-video-{{$index}}"
+                                 ng-model="files"
+                                 onchange="angular.element(this).scope().videoNameChanged(this)"/>
+                          <button class="btn btn-default" ng-click="browseVideo()"><span class="glyphicon glyphicon-folder-open"></span></button>
+                          <button class="btn btn-default" ng-click="uploadVideo()" ng-show="selectFileSuccess"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                          <button class="btn btn-success" ng-show="uploadSuccess" disabled><span class="glyphicon glyphicon-ok"></span></button>
                         </div>
-                        <button class="btn btn-info" ng-click="uploadVideo()">Upload</button>
-                        <p ng-show="uploadSuccess">Upload Succeeded</p>
 
                       </div>
                     </div>
