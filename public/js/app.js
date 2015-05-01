@@ -213,7 +213,7 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
     };
 
     // 提交大题目
-    $scope.submit = function() {
+    $scope.submit = function(isRevised) {
 
         // 不知为何 STRUTS 的后端不能接收 anuglarJS 的 ajax，但用 jQuery 的 ajax 就可以传输了。我这里没有后端环境所以不便调试。
         //$http.post('DealJsonAction.action', JSON.stringify( { myJsonStr: angular.toJson($scope.problem) } ) )
@@ -224,18 +224,27 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
         //
         //    });
 
+
+        var model = newTemplateInstance($scope.problem);
+
+        if (isRevised) {
+            model.isRevised = true;  // 增加修改标识
+        }
+
+        var data = JSON.stringify({ myJsonStr: angular.toJson(model) });
+
         $.ajax({
             url : "DealJsonAction.action",
-            data : JSON.stringify({ myJsonStr: angular.toJson($scope.problem) }),
+            data : data,
             dataType : 'json',
             contentType : 'application/json',
             type : 'POST',
             async : true,
             success : function(res) {
-                console.log(res.data.length);
+                alert('提交成功');
             },
             error: function(res) {
-                alert('error');
+                alert('提交失败');
             }
         });
 
@@ -354,18 +363,18 @@ app.controller('ProblemItemController', ['$scope', function($scope) {
 
     // 选择视频
     $scope.browseVideo = function() {
-        $scope.$parent.browseFile(id);
+        $scope.$parent.$parent.browseFile(id);
     };
 
     // 视频选择好后的事件处理
     $scope.videoNameChanged = function(self) {
-        $scope.$parent.fileNameChanged(self, $scope);
+        $scope.$parent.$parent.fileNameChanged(self, $scope);
     };
 
     // 上传视频
     $scope.uploadVideo = function() {
 
-        $scope.$parent.upload(id, function(succeed, data) {
+        $scope.$parent.$parent.upload(id, function(succeed, data) {
             if (succeed) {
 
                 // 更新显示
@@ -394,18 +403,18 @@ app.controller('FigureController', ['$scope', function($scope) {
     $scope.fileName = '';
     $scope.fileSize = '';
     $scope.fileType = '';
-    var id = 'upload-form-figure-' + $scope.$parent.$index + '-' + $scope.$index;  // input-file 组件 id
-    var cid = 'image-canvas-figure-' + $scope.$parent.$index + '-' + $scope.$index;  // 缩略图 canvas 组件 id
+    var id = 'upload-form-figure-' + $scope.$parent.$parent.$index + '-' + $scope.$index;  // input-file 组件 id
+    var cid = 'image-canvas-figure-' + $scope.$parent.$parent.$index + '-' + $scope.$index;  // 缩略图 canvas 组件 id
     var imageExtReg = /\.(JPG|JPEG|JFIF|EXIF|TIFF|RIF|GIF|BMP|PNG|WEBP|PPM|PGM|PBM|PNM|BPG)/i;
 
     // 选择图形
     $scope.browseFigure = function() {
-        $scope.$parent.browseFile(id);
+        $scope.$parent.$parent.$parent.$parent.browseFile(id);
     };
 
     // 图形选择好后的事件处理
     $scope.figureNameChanged = function(self) {
-        $scope.$parent.$parent.fileNameChanged(self, $scope, function() {
+        $scope.$parent.$parent.$parent.$parent.fileNameChanged(self, $scope, function() {
 
             // 根据文件后缀名判断是否是常见图片格式
             $scope.isImage = imageExtReg.test($scope.fileName);
@@ -421,7 +430,7 @@ app.controller('FigureController', ['$scope', function($scope) {
     // 上传图形
     $scope.uploadFigure = function() {
 
-        $scope.$parent.upload(id, function(succeed, data) {
+        $scope.$parent.$parent.$parent.$parent.upload(id, function(succeed, data) {
             if (succeed) {
 
                 // 更新显示
@@ -446,17 +455,22 @@ app.controller('FigureController', ['$scope', function($scope) {
         var ctx = canvas.getContext('2d');
         var reader = new FileReader();
 
-        reader.onload = function(event) {
+        reader.onload = function() {
             var img = new Image();
+
             img.onload = function() {
                 var magicWidth = 674;  // 容器的宽度
                 var scale = magicWidth / img.width;  // 变换系数
+
                 canvas.width = magicWidth;  // 原则：等宽，不限高
                 canvas.height = img.height * scale;
+
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             };
-            img.src = event.target.result;
+
+            img.src = reader.result;
         };
+
         reader.readAsDataURL(imageLoader.files[0]);
     }
 

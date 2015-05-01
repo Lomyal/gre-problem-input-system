@@ -79,11 +79,14 @@ select {
     width: 100%;
 }
 
-.btn-submit {
-    width: 85%;
-}
 .btn-reset {
     width: 14.4%;
+}
+.btn-revise {
+  width: 42.25%;
+}
+.btn-submit {
+  width: 42.25%;
 }
 
 body {

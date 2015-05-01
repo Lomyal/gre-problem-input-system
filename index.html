@@ -177,7 +177,7 @@
                           <input type="text" class="form-control fake-input-file" disabled ng-model="fileName"/>
                           <input type="file"
                                  class="input-file"
-                                 id="upload-form-figure-{{$parent.$index}}-{{$index}}"
+                                 id="upload-form-figure-{{$parent.$parent.$index}}-{{$index}}"
                                  ng-model="files"
                                  onchange="angular.element(this).scope().figureNameChanged(this)"/>
                           <button class="btn btn-default" ng-click="browseFigure()" title="Browse"><span class="glyphicon glyphicon-folder-open"></span></button>
@@ -185,7 +185,7 @@
                           <button class="btn btn-success" ng-show="uploadSuccess" disabled><span class="glyphicon glyphicon-ok"></span></button>
                           <hr/>
                           <p ng-show="(selectFileSuccess || uploadSuccess) && !isImage"> <strong>Note:</strong> The file selected might not be an image.</p>
-                          <canvas id="image-canvas-figure-{{$parent.$index}}-{{$index}}" ng-show="isImage && (selectFileSuccess || uploadSuccess)"></canvas>
+                          <canvas id="image-canvas-figure-{{$parent.$parent.$index}}-{{$index}}" ng-show="isImage && (selectFileSuccess || uploadSuccess)"></canvas>
                         </div>
 
                       </div>
@@ -220,8 +220,9 @@
                   </div>
                 </div>
 
-                <button class="btn btn-lg btn-primary btn-submit" ng-click="submit()">Submit</button>
                 <button class="btn btn-lg btn-danger btn-reset" ng-click="reset()">Reset</button>
+                <button class="btn btn-lg btn-warning btn-revise" ng-click="submit(true)">Revise</button>
+                <button class="btn btn-lg btn-primary btn-submit" ng-click="submit(false)">Submit</button>
               </div>
             </div>
 
