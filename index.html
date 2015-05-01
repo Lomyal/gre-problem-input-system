@@ -180,9 +180,12 @@
                                  id="upload-form-figure-{{$parent.$index}}-{{$index}}"
                                  ng-model="files"
                                  onchange="angular.element(this).scope().figureNameChanged(this)"/>
-                          <button class="btn btn-default" ng-click="browseFigure()"><span class="glyphicon glyphicon-folder-open"></span></button>
-                          <button class="btn btn-default" ng-click="uploadFigure()" ng-show="selectFileSuccess"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                          <button class="btn btn-default" ng-click="browseFigure()" title="Browse"><span class="glyphicon glyphicon-folder-open"></span></button>
+                          <button class="btn btn-default" ng-click="uploadFigure()" ng-show="selectFileSuccess" title="Upload"><span class="glyphicon glyphicon-arrow-up"></span></button>
                           <button class="btn btn-success" ng-show="uploadSuccess" disabled><span class="glyphicon glyphicon-ok"></span></button>
+                          <hr/>
+                          <p ng-show="(selectFileSuccess || uploadSuccess) && !isImage"> <strong>Note:</strong> The file selected might not be an image.</p>
+                          <canvas id="image-canvas-figure-{{$parent.$index}}-{{$index}}" ng-show="isImage && (selectFileSuccess || uploadSuccess)"></canvas>
                         </div>
 
                       </div>
@@ -206,8 +209,8 @@
                                  id="upload-form-video-{{$index}}"
                                  ng-model="files"
                                  onchange="angular.element(this).scope().videoNameChanged(this)"/>
-                          <button class="btn btn-default" ng-click="browseVideo()"><span class="glyphicon glyphicon-folder-open"></span></button>
-                          <button class="btn btn-default" ng-click="uploadVideo()" ng-show="selectFileSuccess"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                          <button class="btn btn-default" ng-click="browseVideo()" title="Browse"><span class="glyphicon glyphicon-folder-open"></span></button>
+                          <button class="btn btn-default" ng-click="uploadVideo()" ng-show="selectFileSuccess" title="Upload"><span class="glyphicon glyphicon-arrow-up"></span></button>
                           <button class="btn btn-success" ng-show="uploadSuccess" disabled><span class="glyphicon glyphicon-ok"></span></button>
                         </div>
 
@@ -222,9 +225,9 @@
               </div>
             </div>
 
-            <hr>
-            <p>TEST DATA</p>
-            <p>{{problem}}</p>
+            <!--<hr>-->
+            <!--<p>TEST DATA</p>-->
+            <!--<p>{{problem}}</p>-->
           </div>
           
         </div>

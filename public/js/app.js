@@ -287,7 +287,7 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
     };
 
     // 文件选择好后的事件处理
-    $scope.fileNameChanged = function(self, scope) {  // scope 是响应的控制器内的 $scope
+    $scope.fileNameChanged = function(self, scope, callback) {  // scope 是响应的控制器内的 $scope
         if (self.files.length > 0) {
             var fileInfo = self.files[0];
             scope.fileName = fileInfo.name;
@@ -304,9 +304,12 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
             scope.uploadSuccess = false;
         }
 
-
         scope.$apply();
         document.body.focus();
+
+        if (typeof callback === 'function') {
+            callback();
+        }
     };
 
     // 文件上传
@@ -339,7 +342,7 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
 
 
 
-// Problem Item 控制器
+// Problem Item 控制器 (内含 comment、video)
 app.controller('ProblemItemController', ['$scope', function($scope) {
 
     $scope.selectFileSuccess = false;
@@ -387,10 +390,13 @@ app.controller('FigureController', ['$scope', function($scope) {
 
     $scope.selectFileSuccess = false;
     $scope.uploadSuccess = false;
+    $scope.isImage = false;
     $scope.fileName = '';
     $scope.fileSize = '';
     $scope.fileType = '';
-    var id = 'upload-form-figure-' + $scope.$parent.$index + '-' + $scope.$index;
+    var id = 'upload-form-figure-' + $scope.$parent.$index + '-' + $scope.$index;  // input-file 组件 id
+    var cid = 'image-canvas-figure-' + $scope.$parent.$index + '-' + $scope.$index;  // 缩略图 canvas 组件 id
+    var imageExtReg = /\.(JPG|JPEG|JFIF|EXIF|TIFF|RIF|GIF|BMP|PNG|WEBP|PPM|PGM|PBM|PNM|BPG)/i;
 
     // 选择图形
     $scope.browseFigure = function() {
@@ -399,7 +405,17 @@ app.controller('FigureController', ['$scope', function($scope) {
 
     // 图形选择好后的事件处理
     $scope.figureNameChanged = function(self) {
-        $scope.$parent.$parent.fileNameChanged(self, $scope);
+        $scope.$parent.$parent.fileNameChanged(self, $scope, function() {
+
+            // 根据文件后缀名判断是否是常见图片格式
+            $scope.isImage = imageExtReg.test($scope.fileName);
+            $scope.$apply();
+
+            // 显示缩略图
+            if ($scope.isImage) {
+                showThumbnail(id, cid);
+            }
+        });
     };
 
     // 上传图形
@@ -422,6 +438,27 @@ app.controller('FigureController', ['$scope', function($scope) {
             }
         });
     };
+
+    // 显示图像缩略图
+    function showThumbnail(imageLoaderId, imageCanvasId) {
+        var imageLoader = document.getElementById(imageLoaderId);
+        var canvas = document.getElementById(imageCanvasId);
+        var ctx = canvas.getContext('2d');
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+            var img = new Image();
+            img.onload = function() {
+                var magicWidth = 674;  // 容器的宽度
+                var scale = magicWidth / img.width;  // 变换系数
+                canvas.width = magicWidth;  // 原则：等宽，不限高
+                canvas.height = img.height * scale;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(imageLoader.files[0]);
+    }
 
 }]);
 
