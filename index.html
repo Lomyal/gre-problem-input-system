@@ -185,7 +185,8 @@
                           <button class="btn btn-success" ng-show="uploadSuccess" disabled><span class="glyphicon glyphicon-ok"></span></button>
                           <hr/>
                           <p ng-show="(selectFileSuccess || uploadSuccess) && !isImage"> <strong>Note:</strong> The file selected might not be an image.</p>
-                          <canvas id="image-canvas-figure-{{$parent.$parent.$index}}-{{$index}}" ng-show="isImage && (selectFileSuccess || uploadSuccess)"></canvas>
+                          <!--<canvas id="image-canvas-figure-{{$parent.$parent.$index}}-{{$index}}" ng-show="isImage && (selectFileSuccess || uploadSuccess)"></canvas>-->
+                          <img width="674" ng-src="{{fileURL}}" ng-show="isImage && (selectFileSuccess || uploadSuccess)">
                         </div>
 
                       </div>
@@ -212,6 +213,14 @@
                           <button class="btn btn-default" ng-click="browseVideo()" title="Browse"><span class="glyphicon glyphicon-folder-open"></span></button>
                           <button class="btn btn-default" ng-click="uploadVideo()" ng-show="selectFileSuccess" title="Upload"><span class="glyphicon glyphicon-arrow-up"></span></button>
                           <button class="btn btn-success" ng-show="uploadSuccess" disabled><span class="glyphicon glyphicon-ok"></span></button>
+
+                          <hr/>
+                          <p ng-show="(selectFileSuccess || uploadSuccess) && !isSupportedVideo"> <strong>Note:</strong> Format of the selected file is not supported for preview.</p>
+                          <!--<div id="video-wrapper-{{$index}}" ng-show="selectFileSuccess || uploadSuccess">-->
+                          <!--</div>-->
+                          <video width="674" ng-src="{{fileURL}}" ng-show="isSupportedVideo && (selectFileSuccess || uploadSuccess)" controls>
+                            Your browser does not support the <code>video</code> element.
+                          </video>
                         </div>
 
                       </div>

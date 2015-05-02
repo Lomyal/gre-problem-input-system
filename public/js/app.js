@@ -224,6 +224,11 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
         //
         //    });
 
+        // 合法性检查
+        if (!$scope.problem.problemId) {
+            return alert('\'Problem ID\' can not be null.');
+        }
+
 
         var model = newTemplateInstance($scope.problem);
 
@@ -299,6 +304,7 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
     $scope.fileNameChanged = function(self, scope, callback) {  // scope 是响应的控制器内的 $scope
         if (self.files.length > 0) {
             var fileInfo = self.files[0];
+            scope.file = fileInfo;
             scope.fileName = fileInfo.name;
             scope.fileSize = fileInfo.size;
             scope.fileType = fileInfo.type;
@@ -306,6 +312,7 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
             scope.uploadSuccess = false;
 
         } else {  // 应对点击但未选择文件的情况
+            scope.file = null;
             scope.fileName = '';
             scope.fileSize = '';
             scope.fileType = '';
@@ -352,14 +359,17 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
 
 
 // Problem Item 控制器 (内含 comment、video)
-app.controller('ProblemItemController', ['$scope', function($scope) {
+app.controller('ProblemItemController', ['$scope', '$sce', function($scope, $sce) {
 
     $scope.selectFileSuccess = false;
     $scope.uploadSuccess = false;
+    $scope.file = null;
     $scope.fileName = '';
     $scope.fileSize = '';
     $scope.fileType = '';
+    $scope.fileURL = null;  // $sce.trustAsResourceUrl() 返回的是 object 类型，而原始的 URL.createObjectURL() 返回 string 类型
     var id = 'upload-form-video-' + $scope.$index;
+    var videoExtReg = /\.(MP4|WEBM|OGG)/i;
 
     // 选择视频
     $scope.browseVideo = function() {
@@ -368,7 +378,27 @@ app.controller('ProblemItemController', ['$scope', function($scope) {
 
     // 视频选择好后的事件处理
     $scope.videoNameChanged = function(self) {
-        $scope.$parent.$parent.fileNameChanged(self, $scope);
+        $scope.$parent.$parent.fileNameChanged(self, $scope, function() {
+
+            $scope.isSupportedVideo = videoExtReg.test($scope.fileName);
+            $scope.$apply();
+
+            if ($scope.isSupportedVideo) {
+                var URL = window.URL || winodw.webkitURL;
+                $scope.fileURL = $sce.trustAsResourceUrl(URL.createObjectURL($scope.file));
+                $scope.$apply();
+            }
+
+            //// 备用原生 JS 方式
+            //var video = document.createElement('video');
+            //var wrapperId = document.getElementById('video-wrapper-' + $scope.$index);
+            //var magicWidth = 674;  // 容器的宽度
+            //video.src = URL.createObjectURL($scope.file);
+            //video.controls = true;
+            //video.width = magicWidth;
+            //wrapperId.appendChild(video);
+
+        });
     };
 
     // 上传视频
@@ -395,7 +425,7 @@ app.controller('ProblemItemController', ['$scope', function($scope) {
 }]);
 
 // Figure 控制器
-app.controller('FigureController', ['$scope', function($scope) {
+app.controller('FigureController', ['$scope', '$sce', function($scope, $sce) {
 
     $scope.selectFileSuccess = false;
     $scope.uploadSuccess = false;
@@ -403,8 +433,9 @@ app.controller('FigureController', ['$scope', function($scope) {
     $scope.fileName = '';
     $scope.fileSize = '';
     $scope.fileType = '';
+    $scope.fileURL = null;  // $sce.trustAsResourceUrl() 返回的是 object 类型，而原始的 URL.createObjectURL() 返回 string 类型
     var id = 'upload-form-figure-' + $scope.$parent.$parent.$index + '-' + $scope.$index;  // input-file 组件 id
-    var cid = 'image-canvas-figure-' + $scope.$parent.$parent.$index + '-' + $scope.$index;  // 缩略图 canvas 组件 id
+    //var cid = 'image-canvas-figure-' + $scope.$parent.$parent.$index + '-' + $scope.$index;  // 缩略图 canvas 组件 id
     var imageExtReg = /\.(JPG|JPEG|JFIF|EXIF|TIFF|RIF|GIF|BMP|PNG|WEBP|PPM|PGM|PBM|PNM|BPG)/i;
 
     // 选择图形
@@ -422,7 +453,14 @@ app.controller('FigureController', ['$scope', function($scope) {
 
             // 显示缩略图
             if ($scope.isImage) {
-                showThumbnail(id, cid);
+
+                //// canvas 方式显示缩略图 （真的生成缩略图）
+                //showThumbnail(id, cid);
+
+                // img + 宽度调整 方式显示缩略图 （图还是原图，只是进行了显示上的缩放）
+                var URL = window.URL || winodw.webkitURL;
+                $scope.fileURL = $sce.trustAsResourceUrl(URL.createObjectURL($scope.file));
+                $scope.$apply();
             }
         });
     };
@@ -448,31 +486,31 @@ app.controller('FigureController', ['$scope', function($scope) {
         });
     };
 
-    // 显示图像缩略图
-    function showThumbnail(imageLoaderId, imageCanvasId) {
-        var imageLoader = document.getElementById(imageLoaderId);
-        var canvas = document.getElementById(imageCanvasId);
-        var ctx = canvas.getContext('2d');
-        var reader = new FileReader();
-
-        reader.onload = function() {
-            var img = new Image();
-
-            img.onload = function() {
-                var magicWidth = 674;  // 容器的宽度
-                var scale = magicWidth / img.width;  // 变换系数
-
-                canvas.width = magicWidth;  // 原则：等宽，不限高
-                canvas.height = img.height * scale;
-
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            };
-
-            img.src = reader.result;
-        };
-
-        reader.readAsDataURL(imageLoader.files[0]);
-    }
+    //// 显示图像缩略图
+    //function showThumbnail(imageLoaderId, imageCanvasId) {
+    //    var imageLoader = document.getElementById(imageLoaderId);
+    //    var canvas = document.getElementById(imageCanvasId);
+    //    var ctx = canvas.getContext('2d');
+    //    var reader = new FileReader();
+    //
+    //    reader.onload = function() {
+    //        var img = new Image();
+    //
+    //        img.onload = function() {
+    //            var magicWidth = 674;  // 容器的宽度
+    //            var scale = magicWidth / img.width;  // 变换系数
+    //
+    //            canvas.width = magicWidth;  // 原则：等宽，不限高
+    //            canvas.height = img.height * scale;
+    //
+    //            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    //        };
+    //
+    //        img.src = reader.result;
+    //    };
+    //
+    //    reader.readAsDataURL(imageLoader.files[0]);
+    //}
 
 }]);
 
