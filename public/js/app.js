@@ -32,6 +32,7 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
                 ],
                 "figures": [
                     {
+                        "figureId":"",
                         "figureName":"",
                         "figurePath":"",
                         "figureDescription":""
@@ -63,6 +64,7 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
         ],
         "figures": [
             {
+                "figureId":"",
                 "figureName":"",
                 "figurePath":"",
                 "figureDescription":""
@@ -87,6 +89,7 @@ app.controller('AppController', ['$scope', '$http', function($scope, $http) {
 
     // 图形模板
     var figureTemplate = {
+        "figureId":"",
         "figureName":"",
         "figurePath":"",
         "figureDescription":""
@@ -426,6 +429,8 @@ app.controller('ProblemItemController', ['$scope', '$sce', function($scope, $sce
 
 // Figure 控制器
 app.controller('FigureController', ['$scope', '$sce', function($scope, $sce) {
+
+    $scope.figure.figureId = $scope.$index + 1 + '';
 
     $scope.selectFileSuccess = false;
     $scope.uploadSuccess = false;
