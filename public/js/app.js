@@ -376,6 +376,12 @@ app.controller('ProblemItemController', ['$scope', '$sce', function($scope, $sce
 
     // 选择视频
     $scope.browseVideo = function() {
+
+        // 更新模型
+        $scope.problemItem.comment.videoName = '';
+        $scope.problemItem.comment.videoPath = '';
+
+        // 选择视频
         $scope.$parent.$parent.browseFile(id);
     };
 
@@ -445,6 +451,12 @@ app.controller('FigureController', ['$scope', '$sce', function($scope, $sce) {
 
     // 选择图形
     $scope.browseFigure = function() {
+
+        // 更新模型
+        $scope.figure.figureName = '';
+        $scope.figure.figurePath = '';
+
+        // 选择图形
         $scope.$parent.$parent.$parent.$parent.browseFile(id);
     };
 
